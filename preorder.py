@@ -10,9 +10,9 @@ def get_perm_matrix(s, pos_vector, tay, beta):
     # in such way order of other nodes in unordered can be changed!
     for pos, val in enumerate(pos_vector):
         if val == 1:
-            tmp = step1[tmp_beta, :].copy()
-            step1[:, tmp_beta] = step1[:, pos]
-            step1[:, pos] = tmp
+            tmp = step1[:, pos].copy()
+            step1[:, tmp_beta + 1:pos + 1] = step1[:, tmp_beta:pos]
+            step1[:, tmp_beta] = tmp
             tmp_beta += 1
 
     # step 2: move from up of s_u to top of s_p
@@ -44,6 +44,17 @@ if __name__ == '__main__':
     )
     # indexing of nodes from zero
     root = 3
+
+    # input = np.array(
+    #     [
+    #         [0, 0, 0, 0],
+    #         [0, 0, 0, 0],
+    #         [1, 1, 0, 0],
+    #         [0, 0, 1, 0]
+    #     ]
+    # )
+    # # indexing of nodes from zero
+    # root = 3
 
     v = input.shape[0]  # amount of vertices
 
