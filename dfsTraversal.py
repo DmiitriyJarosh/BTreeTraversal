@@ -32,6 +32,70 @@ def get_vector_e(size, pos):
     return res
 
 
+def pre_order(input, root):
+    v = input.shape[0]  # amount of vertices
+
+    s = np.arange(v)
+    tay = 0
+    beta = 0
+
+    # push root
+    perm_matrix, alpha = get_perm_matrix(s, get_vector_e(v, root), tay, beta)
+    s = np.dot(perm_matrix.transpose(), s)
+    input = np.dot(perm_matrix.transpose(), input)
+    input = np.dot(input, perm_matrix)
+    beta += alpha
+
+    while tay < v:
+        # find children
+        children = np.dot(input.transpose(), get_vector_e(v, tay))
+        # pop
+        tay += 1
+        beta += 1 if beta < tay else 0
+
+        # push
+        perm_matrix, alpha = get_perm_matrix(s, children, tay, beta)
+        s = np.dot(perm_matrix.transpose(), s)
+        input = np.dot(perm_matrix.transpose(), input)
+        input = np.dot(input, perm_matrix)
+        beta += alpha
+
+    return s
+
+
+def post_order(input, root):
+    v = input.shape[0]  # amount of vertices
+
+    s = np.arange(v)
+    tay = 0
+    beta = 0
+
+    # push root
+    perm_matrix, alpha = get_perm_matrix(s, get_vector_e(v, root), tay, beta)
+    s = np.dot(perm_matrix.transpose(), s)
+    input = np.dot(perm_matrix.transpose(), input)
+    input = np.dot(input, perm_matrix)
+    beta += alpha
+
+    while tay < v:
+        # find children
+        children = np.dot(input.transpose(), get_vector_e(v, tay))
+
+        if np.sum(children[tay:]) == 0:
+            # pop
+            tay += 1
+            beta += 1 if beta < tay else 0
+        else:
+            # push
+            perm_matrix, alpha = get_perm_matrix(s, children, tay, beta)
+            s = np.dot(perm_matrix.transpose(), s)
+            input = np.dot(perm_matrix.transpose(), input)
+            input = np.dot(input, perm_matrix)
+            beta += alpha
+
+    return s
+
+
 if __name__ == '__main__':
     input = np.array(
         [
@@ -56,31 +120,5 @@ if __name__ == '__main__':
     # # indexing of nodes from zero
     # root = 3
 
-    v = input.shape[0]  # amount of vertices
-
-    s = np.arange(v)
-    tay = 0
-    beta = 0
-
-    # push and pop root
-    perm_matrix, alpha = get_perm_matrix(s, get_vector_e(v, root), tay, beta)
-    s = np.dot(perm_matrix.transpose(), s)
-    input = np.dot(perm_matrix.transpose(), input)
-    input = np.dot(input, perm_matrix)
-    beta += alpha
-
-    while tay < v:
-        # find children
-        children = np.dot(input.transpose(), get_vector_e(v, tay))
-        # pop
-        tay += 1
-        beta += 1 if beta < tay else 0
-
-        # push
-        perm_matrix, alpha = get_perm_matrix(s, children, tay, beta)
-        s = np.dot(perm_matrix.transpose(), s)
-        input = np.dot(perm_matrix.transpose(), input)
-        input = np.dot(input, perm_matrix)
-        beta += alpha
-
-    print(s)
+    res = post_order(input, root)
+    print(res)
