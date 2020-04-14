@@ -15,7 +15,7 @@ def get_perm_matrix(s, pos_vector, tay, beta):
             step1[:, tmp_beta] = tmp
             tmp_beta += 1
 
-    # step 2: move from up of s_u to top of s_p
+    # step 2: move from top of s_u to top of s_p
     step2 = np.identity((pos_vector.shape[0]))
     tmp = step2[:, beta:tmp_beta].copy()
     step2[:, tay + amount_of_children:tmp_beta] = step2[:, tay:beta]
