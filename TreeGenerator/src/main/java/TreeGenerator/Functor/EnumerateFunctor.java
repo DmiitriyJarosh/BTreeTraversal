@@ -13,7 +13,7 @@ public class EnumerateFunctor implements Functor {
     public EnumerateFunctor(int amount, Random random) {
         numbers = new LinkedList<>();
         this.random = random;
-        for (int i = 0; i < amount; i++) {
+        for (int i = 1; i <= amount; i++) {
             numbers.add(i);
         }
     }
